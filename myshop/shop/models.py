@@ -35,9 +35,9 @@ class Product(db.Model):
     #turn nullable to False
     image_path = db.Column(db.String(20), nullable=True,
                            default='default.jpg')
-    product_color = db.Column(db.String(50))
     product_size = db.Column(db.String(50))
     product_description = db.Column(db.String(200))
+    available = db.Column(db.Boolean, default=True)
 
     categorie_id = db.Column(db.Integer, db.ForeignKey('categorie.id'), nullable=False)
 
@@ -55,8 +55,6 @@ class Categorie(db.Model):
 
     def __init__(self, categorie_name,):
         self.categorie_name = categorie_name
-    def __repr__(self):
-        return f"<CATEGORIE : {self.categorie_name}"
 
 
 class Cart(db.Model):

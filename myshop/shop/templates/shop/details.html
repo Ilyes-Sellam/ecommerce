@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block content %}
+ <div class="product-detail">
+Chapter 7
+[ 237 ]
+ 
+ <h1>{{ product.product_name }}</h1>
+ <h2>
+ 
+ {{ product.category }}
+
+ </h2>
+ <p class="price">${{ product.product_price }}</p>
+ {{ product.product_description}}
+ </div>
+{% endblock %}

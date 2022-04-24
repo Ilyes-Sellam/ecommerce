@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+
+
+{% block content %}
+    <div id="sidebar">
+        <h3>Categories</h3>
+       
+    </div>
+    <div id="main" class="product-list">
+       
+        {% for product in products %}
+        <div class="item">
+            
+            <a href="{{url_for('products.get_product', product_name=product.product_name)}}">{{ product.product_name }}</a>
+            <br>
+            ${{ product.product_price }}
+        </div>
+        Chapter 7
+        [ 235 ]
+        {% endfor %}
+    </div>
+{% endblock %}
