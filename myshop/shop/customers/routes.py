@@ -1,13 +1,15 @@
 from flask import render_template, url_for, flash, redirect, Blueprint, request
 from shop import db, bcrypt
-from shop.customers.forms import (RegistrationFrom, LoginFrom)
-from shop.models import Customer
-from flask_login import login_user, current_user, logout_user
+from shop.customers.forms import (RegistrationFrom, LoginFrom, UpdateAccountFrom)
+from shop.models import Customer, Categorie
+from flask_login import login_user, current_user, logout_user, login_required
+
 
 customers = Blueprint('customers', __name__)
 
 @customers.route("/customer_register", methods=['GET', 'POST'])
 def customer_register():
+    categories = Categorie.query.all()
     if current_user.is_authenticated:
         return redirect(url_for('main.home'))
     form = RegistrationFrom()
@@ -24,11 +26,12 @@ def customer_register():
 
         flash(f'Your account has been created! You are now able to log in', 'success')
         return redirect(url_for('customers.customer_login'))
-    return render_template('customer_register.html', title='Register', form=form)
+    return render_template('customer_register.html', title='Register', form=form, categories=categories)
 
 
 @customers.route("/customer_login", methods=['GET', 'POST'])
 def customer_login():
+    categories = Categorie.query.all()
     if current_user.is_authenticated:
         return redirect(url_for('main.home'))
     form = LoginFrom()
@@ -40,7 +43,7 @@ def customer_login():
             return redirect(next_page) if next_page else redirect(url_for('main.home'))
         else:
             flash('log in unsuccessful, please check username and password', 'danger')
-    return render_template('customer_login.html', title='Login', form=form)
+    return render_template('customer_login.html', title='Login', form=form, categories=categories)
 
 
 @customers.route("/admin_login", methods=['GET', 'POST'])
@@ -61,6 +64,24 @@ def admin_login():
 def logout():
     logout_user()
     return redirect(url_for('main.home'))
+
+
+@customers.route("/account", methods=['GET', 'POST'])
+@login_required
+def account():
+    categories = Categorie.query.all()
+    form = UpdateAccountFrom()
+    if form.validate_on_submit():
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        db.session.commit()
+        flash('Your account has been updated!', 'success')
+        return redirect(url_for('customers.account'))
+    elif request.method == 'GET':
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+    
+    return render_template('account.html', title='Account', form=form, categories=categories)
 
 
     

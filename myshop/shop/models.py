@@ -30,7 +30,7 @@ class Customer(db.Model, UserMixin):
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product_name = db.Column(db.String(50))
-    product_price = db.Column(db.Numeric)
+    product_price = db.Column(db.Float())
 
     #turn nullable to False
     image_path = db.Column(db.String(20), nullable=True,
@@ -49,12 +49,22 @@ class Product(db.Model):
         self.categorie_id = categorie_id
 
 
+    def __repr__(self):
+        return self.product_name
+
+
+
 class Categorie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     categorie_name = db.Column(db.String(50), nullable=False)
 
+    products = db.relationship('Product',  backref='categorie')
+
     def __init__(self, categorie_name,):
         self.categorie_name = categorie_name
+
+    def __repr__(self):
+        return self.categorie_name
 
 
 class Cart(db.Model):

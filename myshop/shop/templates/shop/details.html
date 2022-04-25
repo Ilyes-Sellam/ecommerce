@@ -2,16 +2,14 @@
 
 {% block content %}
  <div class="product-detail">
-Chapter 7
-[ 237 ]
- 
- <h1>{{ product.product_name }}</h1>
- <h2>
- 
- {{ product.category }}
-
- </h2>
- <p class="price">${{ product.product_price }}</p>
- {{ product.product_description}}
+    <img src="{{url_for('static', filename='img/no_image.png')}}">
+    <h1>{{ product.product_name }}</h1>
+    <h2>{{ product.category }}</h2>
+    <p class="price">{{ product.product_price }}  DZD</p>
+    <form action="" method="post">
+        <input type="submit" value="Add to cart">
+      </form>
+    {{ product.product_description}}
  </div>
 {% endblock %}
+

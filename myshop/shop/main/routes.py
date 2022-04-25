@@ -1,5 +1,5 @@
 from flask import Blueprint, request, render_template
-from shop.models import Product
+from shop.models import Categorie, Product
 
 
 main = Blueprint('main', __name__)
@@ -7,9 +7,17 @@ main = Blueprint('main', __name__)
 @main.route("/")
 @main.route("/home")
 def home():
-    return render_template('home.html')
+    try:
+        products = Product.query.all()
+        categories = Categorie.query.all()
+    except Exception as e:
+        return str(e)
+    if not products or not categories:
+        return False
+    return render_template('home.html', products=products, categories=categories)
 
 
 @main.route("/contact")
 def contact():
-    return render_template('contact.html', title='Contact')
+    categories = Categorie.query.all()
+    return render_template('contact.html', title='Contact', categories=categories)
