@@ -1,15 +1,30 @@
 {% extends "layout.html" %}
 
 {% block content %}
- <div class="product-detail">
-    <img src="{{url_for('static', filename='img/no_image.png')}}">
-    <h1>{{ product.product_name }}</h1>
-    <h2>{{ product.category }}</h2>
-    <p class="price">{{ product.product_price }}  DZD</p>
-    <form action="" method="post">
-        <input type="submit" value="Add to cart">
-      </form>
-    {{ product.product_description}}
- </div>
+<div class="container-fluid bg-secondary mb-5">
+  <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 150px">
+      <h1 class="font-weight-semi-bold text-uppercase mb-3">Product Details</h1>
+      <div class="d-inline-flex">
+          <p class="m-0"><a href="">Home</a></p>
+          <p class="m-0 px-2">-</p>
+          <p class="m-0">Shop Detail</p>
+      </div>
+  </div>
+</div>
+
+<div class="container-fluid py-5">
+  <div class="row px-xl-5">
+        <img src="{{url_for('static', filename='img/no_image.png')}}">
+
+      <div class="col-lg-7 pb-5">
+        <h1 class="font-weight-semi-bold">{{ product.product_name }}</h1>
+        <h5>{{ product.categorie }}</h2>
+        <h4 class="pt-1">{{ product.product_price }}  DZD</h4>
+        <p class="mb-4"> {{ product.product_description}} </p>
+      </div>
+  </div>
+  <button class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Add To Cart</button>
+</div>
+
 {% endblock %}
 
