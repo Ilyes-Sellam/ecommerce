@@ -1,9 +1,15 @@
+from sqlalchemy import null
 from shop import db, login_manager, admin
 from flask_login import UserMixin, current_user
 from flask_admin.contrib.sqla import ModelView
 
 order_item = db.Table('order_product',
 db.Column('order_id', db.Integer, db.ForeignKey('order.id')),
+db.Column('product_id', db.Integer, db.ForeignKey('product.id'))
+)
+
+add_to_cart = db.Table('carts_products',
+db.Column('cart_id', db.Integer, db.ForeignKey('cart.id')),
 db.Column('product_id', db.Integer, db.ForeignKey('product.id'))
 )
 
@@ -20,11 +26,20 @@ class Customer(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
     is_admin = db.Column(db.Boolean, default=False, nullable=False)
 
+    orders = db.relationship('Order',  backref='customer')
+    cart = db.relationship('Cart',  backref='customer')
+
     def __init__(self, username, email, address, password):
         self.username= username
         self.email = email
         self.address = address
         self.password = password
+
+
+class Order(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    
+    customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
 
 
 class Product(db.Model):
@@ -40,8 +55,9 @@ class Product(db.Model):
     available = db.Column(db.Boolean, default=True)
 
     categorie_id = db.Column(db.Integer, db.ForeignKey('categorie.id'), nullable=False)
-
+    
     order = db.relationship('Order', secondary=order_item, backref='products')
+    carts = db.relationship('Cart', secondary=add_to_cart, backref='products')
 
     def __init__(self, product_name, product_price, categorie_id):
         self.product_name= product_name
@@ -69,16 +85,10 @@ class Categorie(db.Model):
 
 class Cart(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    quantity = db.Column(db.Integer)
+    quantity = db.Column(db.Integer, nullable=False, default=1)
 
-    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False, unique=True)
 
-
-class Order(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    
-    customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
 
 class MyModelView(ModelView):
     def is_accessible(self):

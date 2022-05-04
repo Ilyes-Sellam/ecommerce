@@ -2,7 +2,7 @@
 from flask import render_template, url_for, flash, redirect, Blueprint, request
 from shop import db, bcrypt
 from shop.customers.forms import (RegistrationFrom, LoginFrom, UpdateAccountFrom)
-from shop.models import Customer, Categorie
+from shop.models import Customer, Categorie, Cart
 from flask_login import login_user, current_user, logout_user, login_required
 import boto3
 
@@ -15,6 +15,11 @@ kms = boto3.client('kms', region_name='us-east-2')
 @customers.route("/customer_register", methods=['GET', 'POST'])
 def customer_register():
     categories = Categorie.query.all()
+    cart = Cart.query.filter_by(customer_id=current_user.get_id()).first()
+    if cart == None:
+        cart_items = 0
+    else:
+        cart_items = (len(cart.products))
     if current_user.is_authenticated:
         return redirect(url_for('main.home'))
     form = RegistrationFrom()
@@ -29,12 +34,17 @@ def customer_register():
 
         flash(f'You should confirm your email address! Befor log in', 'success')
         return redirect(url_for('customers.customer_login'))
-    return render_template('customer_register.html', title='Register', form=form, categories=categories)
+    return render_template('customer_register.html', title='Register', form=form, categories=categories, cart_items=cart_items)
 
 
 @customers.route("/customer_login", methods=['GET', 'POST'])
 def customer_login():
     categories = Categorie.query.all()
+    cart = Cart.query.filter_by(customer_id=current_user.get_id()).first()
+    if cart == None:
+        cart_items = 0
+    else:
+        cart_items = (len(cart.products))
     if current_user.is_authenticated:
         return redirect(url_for('main.home'))
     form = LoginFrom()
@@ -54,7 +64,7 @@ def customer_login():
                 return redirect(url_for('customers.customer_login'))
         else:
             flash('log in unsuccessful, please check username and password', 'danger')
-    return render_template('customer_login.html', title='Login', form=form, categories=categories)
+    return render_template('customer_login.html', title='Login', form=form, categories=categories, cart_items=cart_items)
 
 
 @customers.route("/admin_login", methods=['GET', 'POST'])
@@ -81,6 +91,11 @@ def logout():
 @login_required
 def account():
     categories = Categorie.query.all()
+    cart = Cart.query.filter_by(customer_id=current_user.get_id()).first()
+    if cart == None:
+        cart_items = 0
+    else:
+        cart_items = (len(cart.products))
     form = UpdateAccountFrom()
     if form.validate_on_submit():
         current_user.username = form.username.data
@@ -92,7 +107,7 @@ def account():
         form.username.data = current_user.username
         form.email.data = current_user.email
     
-    return render_template('account.html', title='Account', form=form, categories=categories)
+    return render_template('account.html', title='Account', form=form, categories=categories, cart_items=cart_items)
 
 
     
