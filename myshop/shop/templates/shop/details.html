@@ -24,9 +24,16 @@
         <p class="mb-4"> {{ product.product_description}} </p>
       </div>
   </div>
-  <form method="get" action="{{url_for('products.add_product', product_id=product.id)}}">
-    <button class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i>Add To Cart</button>
-  </form>
+  {% if current_user.is_authenticated %}
+    <form method="get" action="{{url_for('products.add_product', product_id=product.id)}}">
+      <button class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i>Add To Cart</button>
+    </form>
+  {% else %}
+    <form method="get" action="{{url_for('customers.customer_login')}}">
+      <button class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i>Add To Cart</button>
+    </form>
+  {% endif %}
+  
 </div>
 
 {% endblock %}

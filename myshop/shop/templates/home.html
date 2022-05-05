@@ -23,7 +23,11 @@
                     </div>
                     <div class="card-footer d-flex justify-content-between bg-light border">
                         <a href="{{url_for('products.get_product', product_name=product.product_name)}}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
-                        <a href="{{url_for('products.add_product', product_id=product.id)}}" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
+                        {% if current_user.is_authenticated %}
+                            <a href="{{url_for('products.add_product', product_id=product.id)}}" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
+                        {% else %}
+                            <a href="{{url_for('customers.customer_login')}}" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

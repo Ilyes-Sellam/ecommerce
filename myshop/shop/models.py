@@ -35,9 +35,14 @@ class Customer(db.Model, UserMixin):
         self.address = address
         self.password = password
 
+    def __repr__(self):
+        return self.username
+
+
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    confirmed = db.Column(db.Boolean, default=False, nullable=False)
     
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
 
@@ -99,3 +104,4 @@ admin.add_view(MyModelView(Customer, db.session))
 admin.add_view(MyModelView(Product, db.session))
 admin.add_view(MyModelView(Categorie, db.session))
 admin.add_view(MyModelView(Cart, db.session))
+admin.add_view(MyModelView(Order, db.session))

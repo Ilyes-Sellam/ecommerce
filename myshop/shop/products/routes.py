@@ -44,9 +44,7 @@ def get_products():
 def categorie_products(categorie_id):
     try:
         categories = Categorie.query.all()
-
         categorie = Categorie.query.filter_by(id=categorie_id).first()
-        
     except Exception as e:
         return str(e)
     if not categorie or not categories:
@@ -70,7 +68,7 @@ def add_product(product_id):
         cart.products.append(product)
         db.session.add(cart)
         db.session.commit()
-        flash('Product added !', 'success')
+        flash('Product Added To Cart !', 'success')
         return redirect(url_for('main.home'))
     else:
         for prod in cart.products:
@@ -80,17 +78,80 @@ def add_product(product_id):
         cart.products.append(product)
         db.session.commit()
         flash('Product added !', 'success')
-        print(cart.products)
         return redirect(url_for('main.home'))
+
 
 @products.route("/cart", methods=["GET"])
 @login_required
 def cart():
+    categories = Categorie.query.all()
     cart = Cart.query.filter_by(customer_id=current_user.get_id()).first()
     if cart == None:
         cart_items = 0
     else:
         cart_items = (len(cart.products))
-
     products = cart.products
-    return render_template('shop/cart.html', cart_items=cart_items, products=products)
+    sub_total_price = 0
+    for product in products:
+        sub_total_price = sub_total_price + product.product_price
+    total_price = sub_total_price + 500
+    return render_template('shop/cart.html', cart_items=cart_items, products=products, 
+            categories=categories, sub_total_price=sub_total_price, total_price=total_price)
+
+
+@products.route("/cart/product/<int:product_id>/remove", methods=["GET"])
+@login_required
+def remove_product(product_id):
+    product = Product.query.filter_by(id=int(product_id)).first()
+    cart = Cart.query.filter_by(customer_id=current_user.get_id()).first()
+    cart.products.remove(product)
+    db.session.commit()
+    flash('Product Removed From Cart !', 'success')
+    return redirect(url_for('products.cart'))
+
+
+@products.route("/checkout", methods=["POST"])
+@login_required
+def checkout():
+    categories = Categorie.query.all()
+    cart = Cart.query.filter_by(customer_id=current_user.get_id()).first()
+    order = Order.query.filter_by(customer_id=current_user.get_id()).first()
+    if request.method == 'POST':
+        if order == None:
+            order = Order(customer_id = current_user.get_id())
+            products = cart.products
+            for product in products: 
+                order.products.append(product)
+            cart.products.clear()
+            products = order.products
+            sub_total_price = 0
+            for product in products:
+                sub_total_price = sub_total_price + product.product_price
+            total_price = sub_total_price + 500
+            cart_items = (len(cart.products))
+            db.session.add(order)
+            db.session.commit()
+        else:
+            products = cart.products
+            for product in products: 
+                order.products.append(product)
+            cart.products.clear()
+            products = order.products
+            sub_total_price = 0
+            for product in products:
+                sub_total_price = sub_total_price + product.product_price
+            total_price = sub_total_price + 500
+            cart_items = (len(cart.products))
+            db.session.commit()
+        return render_template('shop/checkout.html', cart_items=cart_items, products=products, 
+                categories=categories, sub_total_price=sub_total_price, total_price=total_price)
+
+@products.route("/confirm_order", methods=["POST"])
+@login_required
+def confirm_order():
+    order = Order.query.filter_by(customer_id=current_user.get_id()).first()
+    if request.method == 'POST':
+        # the order did not turn to true (make sure to solve the problem) 
+        order.confirmed = True
+        flash('Order has been confirmed', 'success')
+    return redirect(url_for('main.home'))
