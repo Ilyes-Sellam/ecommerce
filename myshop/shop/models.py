@@ -54,8 +54,8 @@ class Product(db.Model):
 
     #turn nullable to False
     image_path = db.Column(db.String(20), nullable=True,
-                           default='default.jpg')
-    product_size = db.Column(db.String(50))
+                           default='no_image.png')
+    product_size = db.Column(db.String(4))
     product_description = db.Column(db.String(200))
     available = db.Column(db.Boolean, default=True)
 

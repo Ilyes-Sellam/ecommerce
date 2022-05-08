@@ -2,6 +2,8 @@ from flask import Blueprint, request, render_template, flash, url_for, redirect
 from shop.models import Categorie, Order, Product, Cart
 from flask_login import login_required, current_user
 from shop import db
+from .utils import save_picture
+from .forms import CreateProduct
 
 products = Blueprint('products', __name__)
 
@@ -155,3 +157,50 @@ def confirm_order():
         order.confirmed = True
         flash('Order has been confirmed', 'success')
     return redirect(url_for('main.home'))
+
+
+@products.route("/admin_add_product", methods=['GET', 'POST'])
+@login_required
+def admin_add_product():
+
+    all_categories = Categorie.query.all()
+
+    product = Product('name', 100, 3)
+
+    form = CreateProduct()
+    if form.validate_on_submit():
+        if form.image_path.data:
+            picture_file = save_picture(form.image_path.data)
+            product.image_path = picture_file
+        product.product_name = form.product_name.data
+        product.product_price = form.product_price.data
+        product.product_size = form.product_size.data
+        product.product_description = form.product_description.data
+        product.available = form.available.data
+        # for categorie in form.categories.data:
+        #     product.categorie_id = categorie
+        db.session.add(product)
+        db.session.commit()
+        flash('Your product has been created!', 'success')
+        return redirect(url_for('products.admin_add_product'))
+
+        
+    elif request.method == 'GET':
+        form = CreateProduct(all_categories)
+        form.product_name.data 
+        form.product_price.data
+        form.product_size.data
+        form.product_description.data
+        form.available.data
+        # for categorie in form.categories:
+        #     categorie.categorie_name.all_categories
+
+    return render_template('admin/add_product.html', form=form)
+
+
+
+
+
+
+
+
