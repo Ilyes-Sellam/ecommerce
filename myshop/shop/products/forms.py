@@ -1,7 +1,9 @@
-from wtforms import StringField, FloatField, BooleanField, FieldList, SubmitField, Form, FormField
+from wtforms import StringField, FloatField, BooleanField, SelectField, SubmitField, Form, FormField
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from wtforms.validators import DataRequired, Length
+
+from shop.models import Categorie
 
 
 # class CategorieForm(Form):
@@ -9,7 +11,7 @@ from wtforms.validators import DataRequired, Length
 
 class CreateProduct(FlaskForm):
     product_name = StringField('Product Name',
-                           validators=[DataRequired(), Length(min=2, max=20)])
+                           validators=[DataRequired(), Length(min=2, max=200)])
     product_price = FloatField('Product Price',
                         validators=[DataRequired()])
     image_path = FileField('Upload The product image', validators=[
@@ -20,6 +22,8 @@ class CreateProduct(FlaskForm):
                            validators=[DataRequired(), Length(min=2, max=200)])
     available = BooleanField('Available',
                            validators=[DataRequired()])
+    categories = Categorie.query.all()
+    categorie = SelectField('Category', choices=[(cat.id, cat.categorie_name) for cat in categories], validators=[DataRequired()])
     # categories = FieldList(FormField(CategorieForm), min_entries=4, max_entries=8)
 
     submit = SubmitField('Add Product')

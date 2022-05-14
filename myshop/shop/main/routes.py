@@ -19,8 +19,7 @@ def home():
             cart_items = (len(cart.products))
     except Exception as e:
         return str(e)
-    if not products or not categories:
-        return False
+    
     return render_template('home.html', products=products, categories=categories, cart_items=cart_items)
 
 

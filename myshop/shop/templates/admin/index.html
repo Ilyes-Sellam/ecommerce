@@ -5,6 +5,10 @@
 <form method="GET" action="{{url_for('customers.logout')}}">
     <button class="btn btn-primary">Logout</button>
 </form>
+<br>
+<form method="GET" action="{{url_for('products.admin_add_product')}}">
+    <button class="btn btn-primary">Add product</button>
+</form>
 {{ super() }}
 
 {% endblock %}

@@ -177,8 +177,7 @@ def admin_add_product():
         product.product_size = form.product_size.data
         product.product_description = form.product_description.data
         product.available = form.available.data
-        # for categorie in form.categories.data:
-        #     product.categorie_id = categorie
+        product.categorie_id = form.categorie.data
         db.session.add(product)
         db.session.commit()
         flash('Your product has been created!', 'success')
@@ -192,6 +191,7 @@ def admin_add_product():
         form.product_size.data
         form.product_description.data
         form.available.data
+        form.categorie.data
         # for categorie in form.categories:
         #     categorie.categorie_name.all_categories
 

@@ -9,7 +9,7 @@
                 <div class="col-lg-4 col-md-6 pb-1">
                     <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">
                         <a href="{{ url_for('products.get_product', product_name=product.product_name) }}">
-                            <img class="img-fluid" src="{{url_for('static', filename='img/no_image.png')}}">
+                            <img class="img-fluid photo" src="{{url_for('static', filename='img/' + product.image_path)}}">
                         </a>
                         <br>
                         <a class="font-weight-semi-bold m-0" href="{{url_for('products.get_product', product_name=product.product_name)}}">{{ product.product_name }}</a>
