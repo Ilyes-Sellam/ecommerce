@@ -25,7 +25,7 @@
 2. ### Conception
 
     - #### Database Model Schema
-         ![Database Schema](/myshop/assets/shema%20data%20base.png)
+         ![Database Schema](/assets/shema%20data%20base.png)
         - #### Explanation of each entity :
             These are the Categorie, Product, Customer, Cart and Order models. 
 
@@ -57,19 +57,19 @@
     - #### Application Features:
         - Users will be able to browse through a product catalog.
 
-        ![catalogue](/myshop/assets/catalogue.png)
+        ![catalogue](/assets/catalogue.png)
         - Also, user can add products to a shopping cart after creating an account and be loged in.
-        ![alt](/myshop/assets/cart.png)
+        ![alt](/assets/cart.png)
 
-        ![alt](/myshop/assets/login.png)
+        ![alt](/assets/login.png)
 
         - Finally, they will be able to check out the cart and place an order.
-        ![alt](/myshop/assets/order.png)
+        ![alt](/assets/order.png)
 
         - The administrator can add products and manage every data in the application after be loged in.
-        ![alt](/myshop/assets/admin_home.png) 
+        ![alt](/assets/admin_home.png) 
 
-        ![alt](/myshop/assets/admin_add_product.png)       
+        ![alt](/assets/admin_add_product.png)       
 3. ### Implementation
 
     - #### The Technologies Used:
